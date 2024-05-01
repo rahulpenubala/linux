@@ -1,0 +1,19 @@
+--help
+man man -> to get section definitions
+apropos -s <> keyword OR man -k -s <> keyword
+----------------------------------------------------
+mkdir -p -> create parents if they does not exists, no error if the directory already exists
+mv -> does not require "r" option
+----------------------------------------------------
+inode = the location of data blocks + meta data of a file (permissions, access times etc)
+hardlink is nothing but a filename that points to inode
+"stat" command can be used to check the details of inode
+ln target_file_name dst_file_name -> to cretae hard link
+hard links cannot be created for directories, and should be created wthin same file system
+to remove the data blocks, all links should be removed/deleted
+----------------------------------------------------
+ln -s target_file_name dst_file_name -> softlink can be created for directories & other filesystems
+ls -l -> output shows "l" for links
+readlink <link> command is used to read the full path of target file
+softlink permissions does not matter, only hardlink permissions applies
+----------------------------------------------------
