@@ -17,3 +17,31 @@ ls -l -> output shows "l" for links
 readlink <link> command is used to read the full path of target file
 softlink permissions does not matter, only hardlink permissions applies
 ----------------------------------------------------
+stickybit - if set, onlu user owner can remove it (recognized by t/T in others permissions)
+suid - if set, will be executed as its user, even if others are doing it (s/S in owner permissions)
+sgid - if set, will be executed as its group, even if others are doing it (s/S in group permissions)
+----------------------------------------------------
+vim - i -insert, /-search, :wq!, q!, dd, yy, pp
+----------------------------------------------------
+find <path> -name xyz -size +10M -mmin +5 -perm 644 (-i -o -not)
+We can search based on time, permissions, size & name 
+----------------------------------------------------
+head/tail (-f), sed -i s/xyz/abc/g, cut -d '' -f, sort file.txt | uniq, sort -n, sdiff file1 file2
+---------------------------------------------------
+grep -ivrw, zgrep, egrep
+--------------------------------------
+^ - start with
+$ - end with
+. - match any "1" character (to escape regex meaning, and search for ".", use "\")
+* - repeat prev char 0 or more times
++ - repeat prev char 1 or more times (egrep, as + is not basic regex, so we could either use "\" to get regex meaning Or egrep)
+{} - {3,},{,3},{3},{3,5} - repeat the prev char that many times
+? - repeat prev char 0 or 1 times
+| - this or that
+() - subexpression
+[] - [a-z],[aug][shyd6f] --> sets
+[^] - negated sets [^abc]
+example for ipv4 - "-w [0-9]{1,3}\.){3}[0-9]{1,3}"
+--------------------------------------
+
+
