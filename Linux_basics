@@ -43,5 +43,38 @@ $ - end with
 [^] - negated sets [^abc]
 example for ipv4 - "-w [0-9]{1,3}\.){3}[0-9]{1,3}"
 --------------------------------------
+tar --create --append --list --file --directory (where to untar the files) --extract --gzip (combine archiving & compression)
+sudo - should be used if we dont want to miss any files that requires elevated permissions
+--------------------------------------
+gzip -k -> keep the original file
+gzip -l -> list, can be used to check compression ratio
+zip -r (recursive for directories) -> Zip can do both archiving & compression
+---------------------------------------
+pre req: remote should have SSH daemon running
+rsync -a <local_path> user@host:<remote_path>
+---------------------------------------
+pre req: disconnect the device to prevent any new changes
+sudo dd if=/dev/vda of=image.raw bs=1MB status=running
+--------------------------------------
+< -> regular input
+<<EOF EOF -> heredoc
+<<< -> herestring
+> or 1> -> standard output
+>> -> append output
+2>/dev/null -> standard error
+> xyz 2>&1 -> redirecting both standard o/p & error o/p to same location
+column -t -> to format redirected standard output in columns
+----------------------------------------
+Certificate is used from encrypting traffic from browser to website, and authenticate the website
+openssl req -> is used to generate CSR & private key
+openssl req X509 -> creates self signed certs
+openssl X509 -> useful to view the contents of the cert
+-----------------------------------------
+sudo systemctl reboot --force (last resort)
+sudo systemctl poweroff --force (last resort)
+sudo shutdown -r (restart) 02:00 'banner'
+----------------------------------------
+
+
 
 
