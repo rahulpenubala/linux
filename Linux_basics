@@ -74,6 +74,35 @@ sudo systemctl reboot --force (last resort)
 sudo systemctl poweroff --force (last resort)
 sudo shutdown -r (restart) 02:00 'banner'
 ----------------------------------------
+After booting up the system, init system (systemd) looks for units (service, socket, device, timer) and starts the processes in order
+service units - manage the life cycle of services
+systemctl list-units --type service --all
+man systemd.service
+systemctl cat sshd.service
+systemctl edit --full sshd.service
+systemctl revert sshd.service - revert to factory settings
+systemctl status sshd.service
+systemctl enable sshd.service - "enable --now" -> Both enables & starts the service
+systemctl disable sshd.service - do not disabled sshd
+systemctl stop/start sshd.service
+systemctl restart sshd.service - after changing the config of any service, but, destructive
+systemctl reload sshd.service - alternative option to restart, non-destructive
+systemctl reload-or-restart sshd.service - not all services support reload, so restart after reload attempt
+systemctl mask/unmask atd.service - to prevent other services from starting/enabling a service
+
+If there are any edits/new additions to service unit files
+/lib/systemd/system -> contains templates
+/etc/systemd/system -> contains synlinks
+If we want a new service unit, create a file in /etc/systemd/system
+[unit] - description, after, documentation etc
+[service] - env variable, star prep section, start section, relaod section, restart secions etc 
+[install] - Alias is not needed if the file is created in /etc/systemd/system, WantedBy which service units
+systemctl daemon-reload, then start/enable the service
+
+**To avoid restartloop (which could cause load on system), add restart delay
+**target is a collection of servce to achieve some purpose. network.target -> all service required for network functioning, multi-user.target etc
+--------------------------------------------------------------------
+
 
 
 
