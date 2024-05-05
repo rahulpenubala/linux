@@ -135,6 +135,46 @@ To prevent it, we can store them in /var/logs/journalctl by adjusting config - /
 last -> all login in recent times
 lastlog -> last login of each user
 -------------------------------------------------------------
+/etc/crontab -> use it only as definition file. Edit personal crontabs
+crontab -l -e -r -> Comibe with which [CMD] for full path
+sudo crontab -u <username> -> as a root working on other user's crontabs
+/etc/cron.hourly/ -> shell scripts are placed here with enough permissions & should not have ".sh" extension
+/etc/cron.daily/
+/etc/cron.weekly/
+/etc/cron.monthly/
+
+/etc/anacrontab -> minimum frequency is 1 day. It makes sure that missed jobs are processed when the system is powered on. 
+To avoid parellel processing of jobs, avoid delays
+anacron -T -> to verify sysntax, unlike crontab we cant test it by shutting down the system
+
+at 15:00 '15 August 2024' 'now + 30 minutes'
+Ctrl+D to save the job
+atq -> list the jobs
+at -c <id> -> to see the contant of a job
+atrm <id> -> to remove a job
+-----------------------------------------------------
+We can push job's output to system logs/journald using systemd-cat --identifier <> --priority <>
+cron, anacron, at logs are also pushed to /var/logs/cron
+-----------------------------------------------------
+apt update -> to update the local copy/index/package manager database which contains the latest info of repositories 
+& show us the possible upgrades. Should be chaned with install/upgrade
+apt upgrade -> actual upgrade og packages
+apt upgrade/install -> automatically downloads dependencies
+apt remove <package>
+apt autoremove -> to remove unused dependencies
+apt autoremove <package> -> combing both remove & autoremove
+apt search <package> --name-only -> search packages using names in DB
+apt show <package> -> once we have the package name, find more details about it
+dpkg --list-files <package> --> list the files used by this package
+dpkg --search <file_path> --> shows the package that is using this file path
+------------------------------------------------------
+/etc/apt/sources.list -> default repositories list
+/etc/apt/keyrings -> download & dearmor (gpg --dearmor key_name) the public key & save it here
+/etc/apt/sources.list.d -> add a file with .list extension & add repo details siagned by keyring
+apt update -> to check if everything is correctly configured
+------------------------------------------------------
+sysctl -a (list the kernal param) -w (non persistent change) -p /etc/sysctl/d/xyz.conf (persistent change)
+------------------------------------------------------
 
 
 
