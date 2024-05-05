@@ -102,6 +102,42 @@ systemctl daemon-reload, then start/enable the service
 **To avoid restartloop (which could cause load on system), add restart delay
 **target is a collection of servce to achieve some purpose. network.target -> all service required for network functioning, multi-user.target etc
 --------------------------------------------------------------------
+ps aux -all processes, all users, user friendly [CPU percentage is per core, process time is also per core, [] - kernal processes]
+ps u -U - specific use
+ps u <pid> - specific process
+ps laux & ps faux - l -> nice values, f-> forest view
+Nice values are from -20 to +19, more nicer if 19. nice -n <number> -> need root prev for negative values
+renice <number> <pid> -> regular user canonly renice once per session
+Children processed inherit parent process nice values
+
+kill -L (SIGHUP - Reload, SIGQUIT - Graceful terminate +core dump, SIGKILL - force kill, SIGTERM - graceful term + default)
+kill -SIGQUIT -QUIT -3 <pid>
+pgrep -a <keyword> & pkill -9 <keyword> are used in combination to kill multiple processes of same name
+
+Ctrl+C -> kill a process
+Ctrl+Z -> stop & move a process to back ground
+[CMD] & -> run the active process in background
+jobs -> to check back ground processes
+fg <jobid> -> to bring background process to foreground
+bg <jobid> -> to resume the process in background
+
+lsof -p <pid> -> shows the files used by a process
+lsof <file_path> -> shows the process of the file
+--------------------------------------------------------------
+rsyslog stores logs in /var/logs - sshd, firewall, boot etc
+/var/logs/messages -> system log files
+
+which <cmd_name> -> full path of the command
+journalctl <cmd> | -u <service_unit> | -p <priority> | --list-boots | --boot <bootid>
+By default, journalctl logs are kept in memory, and lost after reboot. 
+To prevent it, we can store them in /var/logs/journalctl by adjusting config - /etc/systemd/journald.conf
+
+last -> all login in recent times
+lastlog -> last login of each user
+-------------------------------------------------------------
+
+
+
 
 
 
