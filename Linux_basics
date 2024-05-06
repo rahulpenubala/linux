@@ -175,9 +175,33 @@ apt update -> to check if everything is correctly configured
 ------------------------------------------------------
 sysctl -a (list the kernal param) -w (non persistent change) -p /etc/sysctl/d/xyz.conf (persistent change)
 ------------------------------------------------------
-
-
-
+useradd -s (chnage shell) -d (home direcoty) --defaults (to verify defaults)
+ --uid (to assign custom user ID) --system (to create system users, without home directory)
+    -> creates user, default group, home folder, bash shell & copies /etc/skel to home folder
+userdel -r (remove home directory) -> without "r", it only deleted user & group
+passwd - create the password, lock/unlock the password
+/etc/passwd -> contains the users & group information - "ls -ln"
+id/whoami -> to check current user details
+usermod -> to change login, group (secondary, primary), home, shell, lock (only password based), expiration date
+chage -> to expire the password, so the user need to create a new one
+------------------------------------------------------
+groups (to check the groups), groupadd, groupmod, groupdel
+gpasswd --add --delete -> to add users to groups
+usermod -g (primary group) -G (secondary groups)
+-----------------------------------------------------
+printenv -> to print env variables
+.bashrc (env variables) & .bash_profile (for start up scripts) - source
+/etc/environment & /etc/profile.d/ -> systemwide variables & scripts
+----------------------------------------------------
+easiest way to give root previliges is to assign the user to wheel group
+To fine tume, we should add entries in /etc/sudoers using "visudo" - no password, restricted command, run as different user etc
+lock root password (su -), only if users have sudo permissions (sudo -i) 
+----------------------------------------------------
+/etc/nsswitch.conf tells the system to look for passwd & group details in files & ldap
+/etc/nslcd.conf contains the url & other detals of ldap
+getent passwd/group --service ldap
+user resouce limits can be configured using /etc/security/limits.conf
+-----------------------------------------------------
 
 
 
