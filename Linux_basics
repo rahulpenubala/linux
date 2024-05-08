@@ -173,7 +173,8 @@ dpkg --search <file_path> --> shows the package that is using this file path
 /etc/apt/sources.list.d -> add a file with .list extension & add repo details siagned by keyring
 apt update -> to check if everything is correctly configured
 ------------------------------------------------------
-sysctl -a (list the kernal param) -w (non persistent change) -p /etc/sysctl/d/xyz.conf (persistent change)
+sysctl -a (list the kernal param) -w (non persistent change) -p (reload) /etc/sysctl.d/xyz.conf (persistent change)
+sysctl --system -> to reload the values from file
 ------------------------------------------------------
 useradd -s (chnage shell) -d (home direcoty) --defaults (to verify defaults)
  --uid (to assign custom user ID) --system (to create system users, without home directory)
@@ -202,11 +203,51 @@ lock root password (su -), only if users have sudo permissions (sudo -i)
 getent passwd/group --service ldap
 user resouce limits can be configured using /etc/security/limits.conf
 -----------------------------------------------------
-ip link, ip -c address -> can manipulate them using ip commands, but temporary
-netplan or nmcli for permanent network configuraions & also add DNS on interface level
-ip route, route -n -> better option, ip route add/delete, ip neighbour
+ip link -> list the interfaces
+ip -c address -> list the IP of the interface
+ip route / route -n -> shows the routing table, we can add/delete routes
+ip neighbour /arp -n -> shows arp table, MAC of local network members
 /etc/resolved.conf -> golbal DNS
 /etc/hosts -> takes more priority than DNS
+
+We can add/delete/modify links, IPs, routes using "ip" commands, but only temporary
+netplan or nmcli for permanent network configuraions & also add DNS on interface level
+we can also bind a service like httpd, to a specific NIC/IP using "listen" option
+
+Important network services:
+    systemd-networkd = NetworkManager.service -> netplan YAML files
+    systemd-resolved -> /etc/resolved.conf
+    iptables.service (low-level, deeper knowledge, static) / firewalld.service (easy to use, dynamic, high-level)
+-----------------------------------------------------
+netstat /ss -tunlp -> to check the processes listening on our system
+Bond -> Combing 2 or more NIC, as a single interface. This helps with Throughput & Fault tolerance. OS pretends as if it is a single cable
+Bridge -> Combine 2 or more NIC from different networks, as it they are part of one network. Bridge host maintains layer2 tables 
+Again, netplan can be used to create bonds & bridges
+-----------------------------------------------------
+ufw (uncomplicated firewall) -> user friendly frontend for iptables
+    By default, enabling it will boblock everything, at least allow ssh and enable it after that
+    Add rules to allow or deny trafiic (both incoming & outgoing)
+    Rules are checked in top-down approach
+-----------------------------------------------------
+firewalld is another utility in Redhat family
+    Create Zones based on src IPs & add policies to zones
+    firewalld-cmd is used to list, add, remove & make persistent changes
+-----------------------------------------------------
+Port redirection + NAT (masquerading)
+Port redirection -> is required by the public interface device to forward packets to private devices based on port information
+NAT -> but, for the proviate devices to accept that messages, public device NATs the destination IP
+Masqueraduing -> specific form of NAT. Public device also changes the soruce IP, so that private device know where to respond
+
+Firewall rules + NAT rules + Forwarding => NetFilterFramework, we can use "iptables" or nft for this task
+raw -> exceptions from newirk tracking
+filter (INPUT,OUTPUT,FORWARD chains) -> firewall rules
+nat (PREROUTING/POSTROUTING chains) -> port forwarding & masquerading
+magle -> modify packet headers, other than NAT
+
+1. Enable network forwarding
+2. iptables -t NAT -A PREROUTING -i enp1s0 -s 10.0.0.0/24 -p tcp -dpost 8080 -j DNAT --to-destination 192.168.132.80
+3. iptables -t NAT -A POSTROUTING -s 10.0.0.0/24 -o enp6s0 -j MASQUERADE 
+4. iptables --list-rules --table nat
 -----------------------------------------------------
 
 
