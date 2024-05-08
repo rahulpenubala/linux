@@ -202,6 +202,12 @@ lock root password (su -), only if users have sudo permissions (sudo -i)
 getent passwd/group --service ldap
 user resouce limits can be configured using /etc/security/limits.conf
 -----------------------------------------------------
+ip link, ip -c address -> can manipulate them using ip commands, but temporary
+netplan or nmcli for permanent network configuraions & also add DNS on interface level
+ip route, route -n -> better option, ip route add/delete, ip neighbour
+/etc/resolved.conf -> golbal DNS
+/etc/hosts -> takes more priority than DNS
+-----------------------------------------------------
 
 
 
