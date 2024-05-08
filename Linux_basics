@@ -249,8 +249,9 @@ magle -> modify packet headers, other than NAT
 3. iptables -t NAT -A POSTROUTING -s 10.0.0.0/24 -o enp6s0 -j MASQUERADE 
 4. iptables --list-rules --table nat
 -----------------------------------------------------
-
-
-
-
-
+Reverse Proxy & Load balancing -> Ease of maintenance in avoiding DNS propagation by seperating web server, App tarffic filtering, SSl termination
+Chronyd or systemd-timesyncd are used to set server clocks. 
+    install timesyncd
+    edit /etc/systemd/timesyncd.conf -> add required NTP server details
+    timedatectl -> to check, list, add, and set NTP = true
+-----------------------------------------------------
