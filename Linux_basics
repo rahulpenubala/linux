@@ -255,3 +255,25 @@ Chronyd or systemd-timesyncd are used to set server clocks.
     edit /etc/systemd/timesyncd.conf -> add required NTP server details
     timedatectl -> to check, list, add, and set NTP = true
 -----------------------------------------------------
+lsblk & fdisk utilities are available in live CD or USB environmnets 
+lsblk -> list the block disks & partitions . . .
+fdisk --list </dev/disk> -> shows the details of partitions, sectors etc
+cfdisk --> used to create partitions, by choosing partition type (gpt, mbr etc), filesystem type (ext4,efi,swap etc), size etc
+findmnt -> to see mount points, devices & options
+
+mkswap, swapon <devname>, swapon --show, use "dd" to copy /dev/zero to a file, and then mkswap -> all are non persistent
+mkfs.ext4, mkfs.xfs to create filesystems. tune2fs, xfs_admin are used to modify. xfs_repair, e2fsck used to repair
+
+mount/umount to mount file system, but it is non-persitenat
+/etc/fstb -> make persistent mount & swap changes
+after changes, either reboot or reload "systemctl daemon-reload" to load any unit files created after editing this file
+use blkid to check UUID of the device
+<dev> <mountpoint> <type> <option> <dump> <scancheck> - mountpoint is empty for swap, scancheck can be 0,1,2
+
+autofs can be used for on-demand mounting, along with nfsutils
+1. export the shares in nfs config
+2. mount the nfs export in autofs config
+---------------------------------------------------------
+
+
+
