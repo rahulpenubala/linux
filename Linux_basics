@@ -271,9 +271,30 @@ use blkid to check UUID of the device
 <dev> <mountpoint> <type> <option> <dump> <scancheck> - mountpoint is empty for swap, scancheck can be 0,1,2
 
 autofs can be used for on-demand mounting, along with nfsutils
-1. export the shares in nfs config
-2. mount the nfs export in autofs config
+1. export the shares in nfs server config
+2. mount the nfs export in autofs client config
 ---------------------------------------------------------
-
-
+1. Install nfs-kernal-server, configures shares in /etc/exports. 
+2. exportfs -r -> reload new config, exportfs -v -> list the current exports
+3. Install nfs-common on clinet side, and configure mount points in /etc/fstab with type "nfs"
+---------------------------------------------------------
+1. Install nbd-server, configures shares in /etc/nbd-server/config (allowlist:true, [identifier]EXPORTNAME /dev/vda1)
+2. Restrat nbd-service 
+3. Install nbd-clinet, install 'nbd' module using /etc/modules-load.d/modules.conf. 
+4. nbd-clinet [nbd-server-IP] -N [Identifier] -> to connect, -d /dev/nbd0 -> to disconnect, -l -> list remote IDENTIFIERS
+---------------------------------------------------------
+Install sysstat, which includes iostat & pidstat
+iostat -h 1 -p (partition)/-d (device) -> stats of write reads discards in last 1 sec
+pidstat -h 1 -> process level stats of the same
+---------------------------------------------------------
+1. Instal lvm2
+2. lvmdiskscan -> shows the availbale disks, partitions, physical volumes 
+3. pvcreate -> from above disk/partition, create LVM physical volumes [pvremove -> to remove PV]
+4. pvs -> shows only the physical volumes that are attached to LVM. And also the size used by LVM for each PV
+5. vgcreate volume_name pv1 pv2, vgextend, vgreduce, vgs -> list the volume groups [No need to poweroff the ssytem to resize volumes]
+6. lvcreate --size --name <volume-group>, lvs -> list LVs
+7. lvresize --extents 100%VG volume_group/lv_name -> resizing LV to the extent of VG
+8. lvdisplay -> shows the names of lvm block device files (/dev/group_name/lvm_name)
+9. After creating a filesystem, if we extend the LV, --resizefs option with lvresize
+-----------------------------------------------------------
 
