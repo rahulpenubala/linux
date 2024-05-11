@@ -297,4 +297,33 @@ pidstat -h 1 -> process level stats of the same
 8. lvdisplay -> shows the names of lvm block device files (/dev/group_name/lvm_name)
 9. After creating a filesystem, if we extend the LV, --resizefs option with lvresize
 -----------------------------------------------------------
+cryptsetup has 2 modes of encryption plain & luks
+1. In plain format, it is onestep (encrypt+open) good to use --verify-password as it wont ask again. 
+2. In Luks, we have 2 steps, luksformat & open. keychange is easier, unlike plain format, we dont have to reencrypt all the data 
+3. cryptsetup --verify-password open --type plain <mapper_name>, luksformat lukschangekey, open/close 
+/dev/mapper/<mapper_name>
+-----------------------------------------------------------
+raid types - raid0 (no redundancy), raid1 (mirroring), raid5 (we can lose 1 disk), raid6 (we can lose 2 disks), raid10 (raid1+raid0)
+mdadm -> is used to create /dev/md0, add spare disks, manage (add to existing array), stop, --zero-superblock (needed after stop)
+/proc/mdstat -> shows the details of available raids
+-----------------------------------------------------------
+/dev/sda -> local disk (lsblk)
+/dev/mapper/chroot -> local encrypted disk (lsblk -o)
+/dev/sda1 -> local partition (lsblk)
+/dev/vg_name/lvm_name -> lvm (lvdisplay)
+/dev/md0 -> raid array (/proc/mdstat)
+hostname@/export_name -> nfs
+/dev/nbd0 -> remote device (lsblk -o & /etc/nbd-server/config)
+-----------------------------------------------------------
+setfacl -> to set user/group specifc permission & mask. ls -l will show "+" symbol if acl is used
+getfacl -> to see the permissions & mask (max permissions that can be given) details
+chattr -> to set or unset attrinutes like a (append only) , i (immutable)
+-----------------------------------------------------------
+Install quota
+For xfs, to enables quotas, ad userquota, groupquota in "fstab"
+For ext4, quotacheck --create-files & quotaon /mnt
+edquota -> to edit soft/hard limits & graceperiod
+-------------------------------------------------------------
+ulimit -> is used for process related quotas
+
 
