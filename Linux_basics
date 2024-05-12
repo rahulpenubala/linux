@@ -325,5 +325,15 @@ For ext4, quotacheck --create-files & quotaon /mnt
 edquota -> to edit soft/hard limits & graceperiod
 -------------------------------------------------------------
 ulimit -> is used for process related quotas
+------------------------------------------------------------
+Install bind & bind-utils (dig) -> local DNS caching server
+Configure listedn ports, IPs & allowed IPs/netwrok. Reload named service
+use "dig" to verify DNS query time & TTL
+-------------------------------------------------------------
+Add zones in /etc/named.conf & specify type master/slave, and the path to zone file
+In zone file, configute SOA, A, NS, MX, CNAME 
+Update domain registar with NS details, so they can tell the world
+NS->Portfoarwarding->Bind server
+-------------------------------------------------------------
 
 
