@@ -335,5 +335,14 @@ In zone file, configute SOA, A, NS, MX, CNAME
 Update domain registar with NS details, so they can tell the world
 NS->Portfoarwarding->Bind server
 -------------------------------------------------------------
+Install squid proxy
+/etc/squid/squid.conf -> configure http_access for src IPs, destination ports, destination domains
+Make your application use this proxy IP+port
+-------------------------------------------------------------
+/etc/ssh/sshd.conf -> server config file where you can change listen port, IP, root login yes/no, password authentication yes/no etc settings
+/etc/ssh/ssh_config -> default client settings
+.ssh -> config (define hostnames), public key, private key, known_hosts, authorized_keys
+ssh-keygen -R "IP address" -> To remove an entry in known hosts
+-------------------------------------------------------------
 
 
