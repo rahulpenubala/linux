@@ -350,5 +350,3 @@ Make your application use this proxy IP+port
 .ssh -> config (define hostnames), public key, private key, known_hosts, authorized_keys
 ssh-keygen -R "IP address" -> To remove an entry in known hosts
 -------------------------------------------------------------
-
-
