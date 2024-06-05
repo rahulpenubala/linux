@@ -41,7 +41,7 @@ $ - end with
 () - subexpression
 [] - [a-z],[aug][shyd6f] --> sets
 [^] - negated sets [^abc]
-example for ipv4 - "-w [0-9]{1,3}\.){3}[0-9]{1,3}"
+example for ipv4 - "-w ([0-9]{1,3}\.){3}[0-9]{1,3}"
 --------------------------------------
 tar --create --append --list --file --directory (where to untar the files) --extract --gzip (combine archiving & compression)
 sudo - should be used if we dont want to miss any files that requires elevated permissions
@@ -69,6 +69,7 @@ Certificate is used from encrypting traffic from browser to website, and authent
 openssl req -> is used to generate CSR & private key
 openssl req X509 -> creates self signed certs
 openssl X509 -> useful to view the contents of the cert
+openssl rsa -> view key details
 -----------------------------------------
 sudo systemctl reboot --force (last resort)
 sudo systemctl poweroff --force (last resort)
@@ -94,8 +95,8 @@ If there are any edits/new additions to service unit files
 /lib/systemd/system -> contains templates
 /etc/systemd/system -> contains synlinks
 If we want a new service unit, create a file in /etc/systemd/system
-[unit] - description, after, documentation etc
-[service] - env variable, star prep section, start section, relaod section, restart secions etc 
+[unit] - description, after what services it should start, documentation etc
+[service] - env variable, star prep section, start section, relaod section, restart sections etc 
 [install] - Alias is not needed if the file is created in /etc/systemd/system, WantedBy which service units
 systemctl daemon-reload, then start/enable the service
 
@@ -144,26 +145,26 @@ sudo crontab -u <username> -> as a root working on other user's crontabs
 /etc/cron.monthly/
 
 /etc/anacrontab -> minimum frequency is 1 day. It makes sure that missed jobs are processed when the system is powered on. 
-To avoid parellel processing of jobs, avoid delays
+To avoid parellel processing of jobs, add delays
 anacron -T -> to verify sysntax, unlike crontab we cant test it by shutting down the system
 
 at 15:00 '15 August 2024' 'now + 30 minutes'
 Ctrl+D to save the job
 atq -> list the jobs
-at -c <id> -> to see the contant of a job
+at -c <id> -> to see the content of a job
 atrm <id> -> to remove a job
 -----------------------------------------------------
 We can push job's output to system logs/journald using systemd-cat --identifier <> --priority <>
-cron, anacron, at logs are also pushed to /var/logs/cron
+cron, anacron, atd logs are also pushed to /var/logs/cron
 -----------------------------------------------------
 apt update -> to update the local copy/index/package manager database which contains the latest info of repositories 
 & show us the possible upgrades. Should be chaned with install/upgrade
-apt upgrade -> actual upgrade og packages
+apt upgrade -> actual upgrade of the packages
 apt upgrade/install -> automatically downloads dependencies
 apt remove <package>
 apt autoremove -> to remove unused dependencies
 apt autoremove <package> -> combing both remove & autoremove
-apt search <package> --name-only -> search packages using names in DB
+apt search <package> --name-only -> search packages using names in package manager DB
 apt show <package> -> once we have the package name, find more details about it
 dpkg --list-files <package> --> list the files used by this package
 dpkg --search <file_path> --> shows the package that is using this file path
@@ -176,15 +177,17 @@ apt update -> to check if everything is correctly configured
 sysctl -a (list the kernal param) -w (non persistent change) -p (reload) /etc/sysctl.d/xyz.conf (persistent change)
 sysctl --system -> to reload the values from file
 ------------------------------------------------------
-useradd -s (chnage shell) -d (home direcoty) --defaults (to verify defaults)
+useradd -s (change shell) -d (home direcoty) --defaults (to verify defaults)
  --uid (to assign custom user ID) --system (to create system users, without home directory)
     -> creates user, default group, home folder, bash shell & copies /etc/skel to home folder
 userdel -r (remove home directory) -> without "r", it only deleted user & group
-passwd - create the password, lock/unlock the password
+passwd - create the password, lock/unlock (-l/-u) the password
 /etc/passwd -> contains the users & group information - "ls -ln"
 id/whoami -> to check current user details
 usermod -> to change login, group (secondary, primary), home, shell, lock (only password based), expiration date
 chage -> to expire the password, so the user need to create a new one
+chmod -> change permissions, no root previliges needs for our own files
+chown -> chnage ownership, root previliges are mostly required. Not required if I am assigning to my own user:primary_group
 ------------------------------------------------------
 groups (to check the groups), groupadd, groupmod, groupdel
 gpasswd --add --delete -> to add users to groups
@@ -195,12 +198,13 @@ printenv -> to print env variables
 /etc/environment & /etc/profile.d/ -> systemwide variables & scripts
 ----------------------------------------------------
 easiest way to give root previliges is to assign the user to wheel group
-To fine tume, we should add entries in /etc/sudoers using "visudo" - no password, restricted command, run as different user etc
+To fine-tune, we should add entries in /etc/sudoers using "visudo" - no password, restricted command, run as different user etc
 lock root password (su -), only if users have sudo permissions (sudo -i) 
+su -> requires other users's password, sudo -> requires own password
 ----------------------------------------------------
 /etc/nsswitch.conf tells the system to look for passwd & group details in files & ldap
 /etc/nslcd.conf contains the url & other detals of ldap
-getent passwd/group --service ldap
+getent passwd/group --service ldap -> get entries from NSS libraries
 user resouce limits can be configured using /etc/security/limits.conf
 -----------------------------------------------------
 ip link -> list the interfaces
@@ -220,12 +224,12 @@ Important network services:
     iptables.service (low-level, deeper knowledge, static) / firewalld.service (easy to use, dynamic, high-level)
 -----------------------------------------------------
 netstat /ss -tunlp -> to check the processes listening on our system
-Bond -> Combing 2 or more NIC, as a single interface. This helps with Throughput & Fault tolerance. OS pretends as if it is a single cable
+Bond -> Combining 2 or more NIC, as a single interface. This helps with Throughput & Fault tolerance. OS pretends as if it is a single cable
 Bridge -> Combine 2 or more NIC from different networks, as it they are part of one network. Bridge host maintains layer2 tables 
 Again, netplan can be used to create bonds & bridges
 -----------------------------------------------------
 ufw (uncomplicated firewall) -> user friendly frontend for iptables
-    By default, enabling it will boblock everything, at least allow ssh and enable it after that
+    By default, enabling it will block everything, at least allow ssh and enable it after that
     Add rules to allow or deny trafiic (both incoming & outgoing)
     Rules are checked in top-down approach
 -----------------------------------------------------
@@ -239,17 +243,17 @@ NAT -> but, for the proviate devices to accept that messages, public device NATs
 Masqueraduing -> specific form of NAT. Public device also changes the soruce IP, so that private device know where to respond
 
 Firewall rules + NAT rules + Forwarding => NetFilterFramework, we can use "iptables" or nft for this task
-raw -> exceptions from newirk tracking
+raw -> exceptions from nework tracking
 filter (INPUT,OUTPUT,FORWARD chains) -> firewall rules
 nat (PREROUTING/POSTROUTING chains) -> port forwarding & masquerading
-magle -> modify packet headers, other than NAT
+mangle -> modify packet headers, other than NAT
 
 1. Enable network forwarding
 2. iptables -t NAT -A PREROUTING -i enp1s0 -s 10.0.0.0/24 -p tcp -dpost 8080 -j DNAT --to-destination 192.168.132.80
 3. iptables -t NAT -A POSTROUTING -s 10.0.0.0/24 -o enp6s0 -j MASQUERADE 
 4. iptables --list-rules --table nat
 -----------------------------------------------------
-Reverse Proxy & Load balancing -> Ease of maintenance in avoiding DNS propagation by seperating web server, App tarffic filtering, SSl termination
+Reverse Proxy & Load balancing -> Ease of maintenance in avoiding DNS propagation by seperating web server, App tarffic filtering, SSL termination
 Chronyd or systemd-timesyncd are used to set server clocks. 
     install timesyncd
     edit /etc/systemd/timesyncd.conf -> add required NTP server details
@@ -261,18 +265,18 @@ fdisk --list </dev/disk> -> shows the details of partitions, sectors etc
 cfdisk --> used to create partitions, by choosing partition type (gpt, mbr etc), filesystem type (ext4,efi,swap etc), size etc
 findmnt -> to see mount points, devices & options
 
-mkswap, swapon <devname>, swapon --show, use "dd" to copy /dev/zero to a file, and then mkswap -> all are non persistent
+mkswap, swapon <devname>, swapon --show, use "dd" to copy /dev/zero to a file, and then mkswap -> still not mounted for bootup
 mkfs.ext4, mkfs.xfs to create filesystems. tune2fs, xfs_admin are used to modify. xfs_repair, e2fsck used to repair
 
 mount/umount to mount file system, but it is non-persitenat
-/etc/fstb -> make persistent mount & swap changes
+/etc/fstab -> make persistent mount & swap changes
 after changes, either reboot or reload "systemctl daemon-reload" to load any unit files created after editing this file
 use blkid to check UUID of the device
 <dev> <mountpoint> <type> <option> <dump> <scancheck> - mountpoint is empty for swap, scancheck can be 0,1,2
 
-autofs can be used for on-demand mounting, along with nfsutils
-1. export the shares in nfs server config
-2. mount the nfs export in autofs client config
+autofs can be used for on-demand mounting, along with nfs-utils
+1. export the shares in nfs server config (remote shares as exports)
+2. mount the nfs export in autofs client config (/etc/auto.master - /mnt & /etc/auto.mounts - part after 'mnt' & remote shares)
 ---------------------------------------------------------
 1. Install nfs-kernal-server, configures shares in /etc/exports. 
 2. exportfs -r -> reload new config, exportfs -v -> list the current exports
@@ -291,17 +295,18 @@ pidstat -h 1 -> process level stats of the same
 2. lvmdiskscan -> shows the availbale disks, partitions, physical volumes 
 3. pvcreate -> from above disk/partition, create LVM physical volumes [pvremove -> to remove PV]
 4. pvs -> shows only the physical volumes that are attached to LVM. And also the size used by LVM for each PV
-5. vgcreate volume_name pv1 pv2, vgextend, vgreduce, vgs -> list the volume groups [No need to poweroff the ssytem to resize volumes]
+5. vgcreate volume_name pv1 pv2, vgextend, vgreduce, vgs -> list the volume groups [No need to poweroff the sytem to resize volumes]
 6. lvcreate --size --name <volume-group>, lvs -> list LVs
 7. lvresize --extents 100%VG volume_group/lv_name -> resizing LV to the extent of VG
 8. lvdisplay -> shows the names of lvm block device files (/dev/group_name/lvm_name)
-9. After creating a filesystem, if we extend the LV, --resizefs option with lvresize
+9. After creating a filesystem, if we extend the LV, --resizefs option with lvresize is used
 -----------------------------------------------------------
 cryptsetup has 2 modes of encryption plain & luks
 1. In plain format, it is onestep (encrypt+open) good to use --verify-password as it wont ask again. 
-2. In Luks, we have 2 steps, luksformat & open. keychange is easier, unlike plain format, we dont have to reencrypt all the data 
-3. cryptsetup --verify-password open --type plain <mapper_name>, luksformat lukschangekey, open/close 
-/dev/mapper/<mapper_name>
+2. In Luks, we have 2 steps, luksformat & open. keychange is easier, unlike plain format, we dont have to re-encrypt all the data 
+3. cryptsetup --verify-password open --type plain <mapper_name>
+4. cryptsetup luksformat <dev>, cryptsetup lukschangekey, cryptsetup open/close 
+in /etc/fstab -> /dev/mapper/<mapper_name>
 -----------------------------------------------------------
 raid types - raid0 (no redundancy), raid1 (mirroring), raid5 (we can lose 1 disk), raid6 (we can lose 2 disks), raid10 (raid1+raid0)
 mdadm -> is used to create /dev/md0, add spare disks, manage (add to existing array), stop, --zero-superblock (needed after stop)
@@ -320,20 +325,21 @@ getfacl -> to see the permissions & mask (max permissions that can be given) det
 chattr -> to set or unset attrinutes like a (append only) , i (immutable)
 -----------------------------------------------------------
 Install quota
-For xfs, to enables quotas, ad userquota, groupquota in "fstab"
-For ext4, quotacheck --create-files & quotaon /mnt
+For xfs, to enables quotas, ad userquota, groupquota in "fstab" (may be to ext4 as well)
+For ext4, quotacheck --create-files & quotaon (/mnt) -> the filesystem mount point
 edquota -> to edit soft/hard limits & graceperiod
+repquota -> to view quota
 -------------------------------------------------------------
 ulimit -> is used for process related quotas
 ------------------------------------------------------------
 Install bind & bind-utils (dig) -> local DNS caching server
-Configure listedn ports, IPs & allowed IPs/netwrok. Reload named service
+Configure listedn ports, IPs & allowed IPs/network. Reload named service
 use "dig" to verify DNS query time & TTL
 -------------------------------------------------------------
 Add zones in /etc/named.conf & specify type master/slave, and the path to zone file
 In zone file, configute SOA, A, NS, MX, CNAME 
 Update domain registar with NS details, so they can tell the world
-NS->Portfoarwarding->Bind server
+Internet SRC IP ->Portforwarding->Bind server (Private IP)
 -------------------------------------------------------------
 Install squid proxy
 /etc/squid/squid.conf -> configure http_access for src IPs, destination ports, destination domains
@@ -344,4 +350,3 @@ Make your application use this proxy IP+port
 .ssh -> config (define hostnames), public key, private key, known_hosts, authorized_keys
 ssh-keygen -R "IP address" -> To remove an entry in known hosts
 -------------------------------------------------------------
-test
